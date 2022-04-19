@@ -18,12 +18,13 @@ workflows:
       equal: [ 'webhook', << pipeline.trigger_source >> ]
     jobs:
       - identity
-  every_10m:
+  every_5m:
     when:
-      equal: [ 'scheduled', << pipeline.trigger_source >> ]
+      not:
+        equal: [ 'api', << pipeline.trigger_source >> ]
     jobs:
       - identity
     triggers:
       - schedule:
-          # every 10 minutes!
-          cron: '*/10 * * * *'
+          # every 5 minutes!
+          cron: '*/5 * * * *'
