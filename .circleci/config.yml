@@ -12,18 +12,18 @@ jobs:
             echo "Hello, this is job: ${CIRCLE_WORKFLOW_ID_JOB_ID}"
             echo "And, I was triggered via << pipeline.trigger_source >>"
 
-  workflows:
-    main:
-      when:
-        equal: [ 'webhook', << pipeline.trigger_source >> ]
-      jobs:
-        - identity
-    every_10m:
-      when:
-        equal: [ 'scheduled', << pipeline.trigger_source >> ]
-      jobs:
-        - identity
-      triggers:
-        - schedule:
-            # every 10 minutes!
-            cron: '*/10 * * * *'
+workflows:
+  main:
+    when:
+      equal: [ 'webhook', << pipeline.trigger_source >> ]
+    jobs:
+      - identity
+  every_10m:
+    when:
+      equal: [ 'scheduled', << pipeline.trigger_source >> ]
+    jobs:
+      - identity
+    triggers:
+      - schedule:
+          # every 10 minutes!
+          cron: '*/10 * * * *'
