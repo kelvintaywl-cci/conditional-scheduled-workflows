@@ -24,8 +24,7 @@ workflows:
         - and:
             - equal: [ main, << pipeline.git.branch >> ]
             - << pipeline.parameters.run_specs_on_main_branch >>
-        - and:
-            - not:
-                equal: [ main, << pipeline.git.branch >> ]
+        - not:
+            equal: [ main, << pipeline.git.branch >> ]
     jobs:
       - identity    
