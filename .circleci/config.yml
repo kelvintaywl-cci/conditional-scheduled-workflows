@@ -24,8 +24,6 @@ workflows:
         - and:
             - equal: [ main, << pipeline.git.branch >> ]
             - << pipeline.parameters.run_specs_on_main_branch >>
-        # This monstrosity is a negative lookahead - basically matching any string that
-        # is not master. Necessary because circle doesn't allow for list nots with parameters.
         - and:
             - not:
                 equal: [ main, << pipeline.git.branch >> ]
