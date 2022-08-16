@@ -12,19 +12,22 @@ jobs:
             echo "Hello, this is job: ${CIRCLE_WORKFLOW_ID_JOB_ID}"
             echo "And, I was triggered via << pipeline.trigger_source >>"
 
+parameters:
+  run_specs_on_main_branch:
+    type: boolean
+    default: false
+
 workflows:
   main:
     when:
-      equal: [ 'webhook', << pipeline.trigger_source >> ]
+      or:
+        - and:
+            - equal: [ main, << pipeline.git.branch >> ]
+            - << pipeline.parameters.run_specs_on_main_branch >>
+        # This monstrosity is a negative lookahead - basically matching any string that
+        # is not master. Necessary because circle doesn't allow for list nots with parameters.
+        - and:
+            - not:
+                equal: [ main, << pipeline.git.branch >> ]
     jobs:
-      - identity
-  every_5m:
-    when:
-      not:
-        equal: [ 'api', << pipeline.trigger_source >> ]
-    jobs:
-      - identity
-    triggers:
-      - schedule:
-          # every 5 minutes!
-          cron: '*/5 * * * *'
+      - identity    
