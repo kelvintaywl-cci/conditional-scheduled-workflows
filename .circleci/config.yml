@@ -1,6 +1,12 @@
 version: 2.1
 
 jobs:
+  noop:
+    resource_class: small
+    docker:
+      - image: cimg/base:stable
+    steps:
+      - run: echo done
   identity:
     resource_class: small
     docker:
@@ -19,15 +25,18 @@ parameters:
 
 workflows:
   main:
-    when:
-      or:
-        - and:
-            - equal: [ main, << pipeline.git.branch >> ]
-            - << pipeline.parameters.run_specs_on_main_branch >>
-        # This monstrosity is a negative lookahead - basically matching any string that
-        # is not master. Necessary because circle doesn't allow for list nots with parameters.
-        - and:
-            - not:
-                equal: [ main, << pipeline.git.branch >> ]
+    when: true
     jobs:
-      - identity    
+      - identity:
+          filters:
+            branches:
+              only:
+                - /^feature.*/
+                - /^bugfix.*/
+                - /^other.*/
+                - /^hotfix.*/
+                - /^release.*/
+                - /^revert-.*/
+      - noop:
+          requires:
+            - identity
