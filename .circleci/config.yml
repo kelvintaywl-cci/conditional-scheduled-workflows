@@ -2,9 +2,10 @@ version: 2.1
 
 jobs:
   noop:
-    resource_class: small
     docker:
-      - image: cimg/base:stable
+      - image: cimg/go:1.17.13
+    working_directory: /home/circleci/go/sn-backend
+    resource_class: small
     steps:
       - run: echo done
   identity:
